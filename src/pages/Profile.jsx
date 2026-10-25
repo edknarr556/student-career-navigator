@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { useToast } from '../components/ToastProvider.jsx';
 import { EMPLOYMENT_TYPES } from '../data/jobs.js';
-import demoProfile from '../data/demoProfile.js';
+import demoProfile, { ACADEMIC_YEARS } from '../data/demoProfile.js';
 
 // Split a comma / newline separated string into a clean array.
 function parseList(str) {
@@ -21,8 +21,10 @@ export default function Profile() {
     university: profile.university || '',
     major: profile.major || '',
     graduationYear: profile.graduationYear || '',
+    academicYear: profile.academicYear || '',
     skills: (profile.skills || []).join(', '),
     interests: (profile.interests || []).join(', '),
+    experience: profile.experience || '',
     preferredLocation: profile.preferredLocation || '',
     preferredType: profile.preferredType || 'Internship',
   });
@@ -59,12 +61,16 @@ export default function Profile() {
       return;
     }
     updateProfile({
+      // Preserve any existing fields not shown in this form.
+      ...profile,
       name: form.name.trim(),
       university: form.university.trim(),
       major: form.major.trim(),
       graduationYear: form.graduationYear.trim(),
+      academicYear: form.academicYear,
       skills: parseList(form.skills),
       interests: parseList(form.interests),
+      experience: form.experience.trim(),
       preferredLocation: form.preferredLocation.trim(),
       preferredType: form.preferredType,
     });
@@ -78,8 +84,10 @@ export default function Profile() {
       university: profile.university || '',
       major: profile.major || '',
       graduationYear: profile.graduationYear || '',
+      academicYear: profile.academicYear || '',
       skills: (profile.skills || []).join(', '),
       interests: (profile.interests || []).join(', '),
+      experience: profile.experience || '',
       preferredLocation: profile.preferredLocation || '',
       preferredType: profile.preferredType || 'Internship',
     });
@@ -93,8 +101,10 @@ export default function Profile() {
       university: demoProfile.university,
       major: demoProfile.major,
       graduationYear: demoProfile.graduationYear,
+      academicYear: demoProfile.academicYear,
       skills: demoProfile.skills.join(', '),
       interests: demoProfile.interests.join(', '),
+      experience: demoProfile.experience,
       preferredLocation: demoProfile.preferredLocation,
       preferredType: demoProfile.preferredType,
     });
@@ -119,9 +129,10 @@ export default function Profile() {
             <ReadRow label="Name" value={profile.name} />
             <ReadRow label="University" value={profile.university} />
             <ReadRow label="Major" value={profile.major} />
+            <ReadRow label="Academic Year" value={profile.academicYear} />
             <ReadRow label="Graduation Year" value={profile.graduationYear} />
-            <ReadRow label="Preferred Location" value={profile.preferredLocation} />
-            <ReadRow label="Preferred Employment Type" value={profile.preferredType} />
+            <ReadRow label="Preferred Job Location" value={profile.preferredLocation} />
+            <ReadRow label="Preferred Job Type" value={profile.preferredType} />
           </div>
 
           <div className="section-title">Skills</div>
@@ -137,6 +148,13 @@ export default function Profile() {
               ? profile.interests.map((s) => <span key={s} className="chip">{s}</span>)
               : <span style={{ color: 'var(--gray-400)' }}>No interests added yet.</span>}
           </div>
+
+          <div className="section-title">Previous Experience</div>
+          <p style={{ marginTop: 0 }}>
+            {profile.experience
+              ? profile.experience
+              : <span style={{ color: 'var(--gray-400)' }}>No previous experience added yet.</span>}
+          </p>
         </div>
       </div>
     );
@@ -190,6 +208,21 @@ export default function Profile() {
           </div>
 
           <div className="field">
+            <label htmlFor="academicYear">Academic Year</label>
+            <select
+              id="academicYear"
+              className="select"
+              value={form.academicYear}
+              onChange={(e) => setField('academicYear', e.target.value)}
+            >
+              <option value="">— Select —</option>
+              {ACADEMIC_YEARS.map((y) => (
+                <option key={y}>{y}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="field">
             <label htmlFor="grad">Graduation Year</label>
             <input
               id="grad"
@@ -202,7 +235,7 @@ export default function Profile() {
           </div>
 
           <div className="field">
-            <label htmlFor="loc">Preferred Location</label>
+            <label htmlFor="loc">Preferred Job Location</label>
             <input
               id="loc"
               className="input"
@@ -213,7 +246,7 @@ export default function Profile() {
           </div>
 
           <div className="field">
-            <label htmlFor="ptype">Preferred Employment Type</label>
+            <label htmlFor="ptype">Preferred Job Type</label>
             <select
               id="ptype"
               className="select"
@@ -251,6 +284,20 @@ export default function Profile() {
             value={form.interests}
             onChange={(e) => setField('interests', e.target.value)}
             placeholder="IT Management, Business Technology, Systems Administration"
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="experience">
+            Previous Experience{' '}
+            <span className="hint">(jobs, internships, or projects — mentioning skills here improves matches)</span>
+          </label>
+          <textarea
+            id="experience"
+            className="textarea"
+            value={form.experience}
+            onChange={(e) => setField('experience', e.target.value)}
+            placeholder="e.g. Help desk volunteer at campus IT center; built an inventory app with SQL and Java."
           />
         </div>
 
