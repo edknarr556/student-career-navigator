@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext.jsx';
 import { useToast } from '../components/ToastProvider.jsx';
 import { EMPLOYMENT_TYPES } from '../data/jobs.js';
 import demoProfile, { ACADEMIC_YEARS } from '../data/demoProfile.js';
+import { MAJORS } from '../data/majors.js';
 
 // Split a comma / newline separated string into a clean array.
 function parseList(str) {
@@ -198,12 +199,36 @@ export default function Profile() {
 
           <div className="field">
             <label htmlFor="major">Major *</label>
-            <input
+            <select
               id="major"
-              className={`input ${errors.major ? 'input--error' : ''}`}
-              value={form.major}
-              onChange={(e) => setField('major', e.target.value)}
-            />
+              className={`select ${errors.major ? 'input--error' : ''}`}
+              value={MAJORS.includes(form.major) ? form.major : (form.major ? '__custom__' : '')}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === '__custom__') {
+                  // Keep whatever custom text is there, or clear to let them type.
+                  setField('major', form.major && !MAJORS.includes(form.major) ? form.major : '');
+                } else {
+                  setField('major', v);
+                }
+              }}
+            >
+              <option value="">— Select a major —</option>
+              {MAJORS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+              <option value="__custom__">Other (type below)</option>
+            </select>
+            {/* Free-text fallback so any major is still supported. */}
+            {!MAJORS.includes(form.major) && (
+              <input
+                className={`input ${errors.major ? 'input--error' : ''}`}
+                style={{ marginTop: '0.5rem' }}
+                placeholder="Enter your major"
+                value={form.major}
+                onChange={(e) => setField('major', e.target.value)}
+              />
+            )}
             {errors.major && <div className="field__error">{errors.major}</div>}
           </div>
 

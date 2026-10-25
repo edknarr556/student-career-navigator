@@ -15,6 +15,8 @@ export default function TopMatchCard({ job, rank, onViewDetails }) {
   const matched = m.matchedSkills || [];
   const missing = m.missingSkills || [];
   const experienceSkills = m.experienceSkills || [];
+  const reasons = m.reasons || [];
+  const eligibilityNote = m.eligibilityNote || '';
 
   const handleSave = () => {
     toggleSavedJob(job.id);
@@ -46,9 +48,19 @@ export default function TopMatchCard({ job, rank, onViewDetails }) {
         <span>🧭 {job.field}</span>
         <span>💼 {job.employmentType}</span>
         {job.pay && <span>💲 {job.pay}</span>}
+        <span className="chip chip--muted" title="This is a simulated opportunity with a fictional employer">
+          Simulated
+        </span>
       </div>
 
-      <MatchBar percentage={m.percentage ?? 0} reasons={m.reasons} />
+      <MatchBar percentage={m.percentage ?? 0} reasons={reasons} />
+
+      {/* Eligibility / certification warning for grad-degree or license roles */}
+      {eligibilityNote && (
+        <div className="eligibility-note" role="note">
+          🚫 {eligibilityNote}
+        </div>
+      )}
 
       {/* Matching qualifications */}
       <div className="match-breakdown">
@@ -73,10 +85,10 @@ export default function TopMatchCard({ job, rank, onViewDetails }) {
         )}
       </div>
 
-      {/* Missing skills */}
+      {/* Missing / qualifications to develop */}
       <div className="match-breakdown">
         <div className="match-breakdown__title match-breakdown__title--gap">
-          ⚠️ Missing skills to develop
+          ⚠️ Qualifications you may be missing
         </div>
         {missing.length > 0 ? (
           <div className="chips">
@@ -87,6 +99,11 @@ export default function TopMatchCard({ job, rank, onViewDetails }) {
         ) : (
           <p className="match-breakdown__empty">
             You already list every required skill for this role. 🎉
+          </p>
+        )}
+        {(job.qualifications || []).length > 0 && (
+          <p className="match-breakdown__quals">
+            <strong>Listed requirements:</strong> {job.qualifications.join(' · ')}
           </p>
         )}
       </div>

@@ -872,3 +872,20 @@ table.tracker tr:hover td {
   border-color: transparent;
   font-weight: 600;
 }
+
+/* Eligibility warning for grad-degree / license-only roles */
+.eligibility-note {
+  background: var(--red-100);
+  color: var(--red-600);
+  border: 1px solid #f6b9b9;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 0.2rem 0;
+}
+.match-breakdown__quals {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  margin: 0.4rem 0 0;
+}
