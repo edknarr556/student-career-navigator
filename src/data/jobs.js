@@ -1,6 +1,13 @@
 // Realistic sample job listings for the Student Career Navigator prototype.
 // Each listing is self-contained so the app can run entirely offline using
 // browser local storage — no external APIs or databases are required.
+//
+// IMPORTANT (university research prototype): this is a FIXED SAMPLE DATASET.
+// These listings are demonstration data, not live job postings. The UI labels
+// them as such. Recommendations are produced by filtering/ranking this dataset
+// against the participant's profile (see src/utils/matching.js) — no live AI
+// service or external API is called, so there are no credentials to manage.
+export const IS_DEMO_DATA = true;
 
 export const EMPLOYMENT_TYPES = [
   'Internship',
